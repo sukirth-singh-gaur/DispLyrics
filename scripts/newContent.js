@@ -1,5 +1,16 @@
 console.log('Displyrics console log is working!');
 
+let state = {
+    "lyrics-available" : true,
+    "lyrics-fetched" : false,
+    "lyrics-displayed" : false
+};
+  
+chrome.storage.local.set({ status: state }, () => {
+    console.log("State saved from content script");
+});
+  
+
 const style = document.createElement("style");
 style.textContent = `
 .container-style {
