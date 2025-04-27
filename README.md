@@ -8,5 +8,5 @@ Rest of the UI on the Spotify webpage like enabling the Lyrics Button for songs 
 Appropriate CSS styling is done to fit the Spotify Theme.
 Popup page is developed so that users can get logs of whether the backend is working or not.
 
-
+## Sample
 ![Description](assets/images/Screenshot%202025-04-27%20230235.png)
