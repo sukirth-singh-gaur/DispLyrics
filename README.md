@@ -1,5 +1,6 @@
 ﻿# DispLyrics
-
+## Tools Used
+### Manifest-Chrome Dev Tools, Selenium, BeautifulSoup4, Flask, JavaScript, HTML, CSS, DOM
 ## Working
 ### A chrome extension which scrapes the lyrics of the currently playing song from AZ-Lyrics.com using Selenium and BeautifulSoup4.    
 ### The python scraping script is made into a Flask app.  
