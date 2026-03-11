@@ -1,77 +1,89 @@
-﻿# DispLyrics
-## Tools Used
-### Manifest-Chrome Dev Tools, Selenium, BeautifulSoup4, Flask, JavaScript, HTML, CSS, DOM
-## Working
-### A chrome extension which scrapes the lyrics of the currently playing song from AZ-Lyrics.com using Selenium and BeautifulSoup4.    
-### The python scraping script is made into a Flask app.  
-### The chrome extension sends a GET request to the Flask server with the song name and the server responds back with the song's lyrics.  
-### Rest of the UI on the Spotify webpage like enabling the Lyrics Button for songs with lyrics not available and getting the currently playing song is done using DOM manupulations.  
-### Appropriate CSS styling is done to fit the Spotify Theme.  
-### Popup page is developed so that users can get logs of whether the backend is working or not.  
+# DispLyrics
 
-## Sample
 ![Description](assets/images/Screenshot%202025-04-27%20230235.png)
 
+
+A Chrome extension that enables lyrics on Spotify for songs that do not have built-in lyrics by dynamically fetching them from the web.
+
+## Tools & Technologies
+
+* **Frontend:** JavaScript, HTML, CSS, DOM Manipulation
+* **Backend:** Python, Flask
+* **Scraping:** Selenium, BeautifulSoup4
+* **Dev Tools:** Chrome DevTools
+* **Containerization:** Docker
+
+
+# Working
+
+DispLyrics enhances the Spotify web player by enabling the **Lyrics button** for songs that do not have official lyrics available.
+
+When a song is played:
+
+1. The Chrome extension detects the **currently playing track** using DOM inspection on the Spotify webpage.
+2. The extension sends a **GET request** to a locally running Flask API with the song name.
+3. The Flask backend launches a **Chromium browser session using Selenium**.
+4. Selenium navigates to **AZLyrics**, searches for the song, and loads the lyrics page.
+5. **BeautifulSoup4** parses the HTML and extracts the lyrics.
+6. The API returns the lyrics as JSON.
+7. The extension dynamically **injects the lyrics into the Spotify UI** with styling that matches the Spotify theme.
+
+A popup page in the extension shows **backend logs and status** so users can verify whether the API is running.
 
 
 # DispLyrics API (Docker + Selenium)
 
 A **local-only HTTP API** that fetches song lyrics using a real browser session (Chromium + Selenium), packaged in Docker.
 
-This project is designed to be used as:
+This project can be used as:
 
-* a **personal lyrics backend**
-* a **browser extension API**
-* an **educational example** of browser-based scraping
+* a personal lyrics backend
+* a browser extension API
+* an educational example of browser-based scraping
 
->  This is **not** a hosted service and **must not** be deployed publicly.
+⚠️ This is **not a hosted service** and must **not be deployed publicly**.
 
 
+# Overview
 
-## Overview
+The API exposes a simple endpoint that:
 
-This application exposes a simple HTTP endpoint that:
-
-1. Accepts a song name
-2. Searches for the song using a real browser session
+1. Accepts a **song name**
+2. Searches for the song using a **real browser session**
 3. Navigates to the lyrics page
 4. Extracts and returns lyrics as structured text
 
-Because it uses a **real browser (Selenium)** instead of raw HTTP requests, it can handle sites that block traditional scraping.
+Because it uses a **real browser (Selenium)** instead of raw HTTP requests, it can bypass many anti-scraping protections used by lyrics websites.
 
 
+# API Specification
 
-## API Specification
-
-### Base URL
+## Base URL
 
 ```
 http://localhost:5001
 ```
 
 
-
-### GET `/get_lyrics`
+## GET /get_lyrics
 
 Fetch lyrics for a given song.
 
-#### Query Parameters
+### Query Parameters
 
-| Name   | Type   | Required | Description             |
-| ------ | ------ | -------- | ----------------------- |
-| `song` | string |  yes    | Song name to search for |
+| Name | Type   | Required | Description             |
+| ---- | ------ | -------- | ----------------------- |
+| song | string | yes      | Song name to search for |
 
 
+### Example Request
 
-#### Example Request
-
-```bash
+```
 curl "http://localhost:5001/get_lyrics?song=believer"
 ```
 
 
-
-#### Example Success Response
+### Example Success Response
 
 ```json
 {
@@ -81,8 +93,7 @@ curl "http://localhost:5001/get_lyrics?song=believer"
 ```
 
 
-
-#### Example Error Responses
+### Example Error Responses
 
 ```json
 { "error": "Missing song name" }
@@ -97,56 +108,53 @@ curl "http://localhost:5001/get_lyrics?song=believer"
 ```
 
 
-
-## Architecture (API-centric)
+# Architecture
 
 ```
-Client (curl / browser / extension)
+Client (Extension / Browser / curl)
         |
         | HTTP GET /get_lyrics
         v
-Flask API (Docker)
+Flask API (Docker Container)
         |
-        | Selenium (Chromium)
+        | Selenium → Chromium Browser
         v
-Target website (real browser session)
+Target Website (AZLyrics)
         |
         v
-HTML → BeautifulSoup → Lyrics extraction
+HTML → BeautifulSoup → Lyrics Extraction
 ```
 
-### Why Selenium?
+
+# Why Selenium?
 
 Many lyrics websites:
 
-* block `requests` / raw HTTP scraping
-* serve bot-detection pages
+* block raw HTTP requests
+* implement bot detection
 * require real browser behavior
 
-This API intentionally uses a **full browser session** to ensure reliability.
+Using **Selenium with a real Chromium browser session** improves scraping reliability.
 
 
+# Running Locally
 
-## Running Locally (Required)
-
-### Prerequisites
+## Prerequisites
 
 * Docker
 * Internet connection
 
 
+## Build Docker Image
 
-### Build the image
-
-```bash
+```
 docker build -t lyrics-api .
 ```
 
 
+## Run Container
 
-### Run the container
-
-```bash
+```
 docker run -p 5001:5000 lyrics-api
 ```
 
@@ -157,62 +165,53 @@ http://localhost:5001
 ```
 
 
+# Intended Usage
 
-## Intended Usage
-
-  Personal projects
-  Browser extensions
-  Local automation
-  Educational scraping reference
-
+* Personal projects
+* Browser extensions
+* Local automation
+* Educational scraping reference
 
 
-## Not Intended For
+# Not Intended For
 
-  Public deployment
-  Commercial usage
-  High-frequency scraping
-  Hosting lyrics as a service
+* Public deployment
+* Commercial usage
+* High-frequency scraping
+* Hosting lyrics as a service
 
 
-
-## Important Disclaimer
-
- **Read carefully**
+# Important Disclaimer
 
 This project:
 
-* Does **not** host or redistribute lyrics
-* Fetches content dynamically using the user’s own browser session
+* Does **not host or redistribute lyrics**
+* Fetches content dynamically using the **user’s own browser session**
 * Is provided for **educational and personal use only**
 
-All lyrics and content belong to their respective copyright holders.
+All lyrics belong to their respective copyright holders.
 
-Users are responsible for complying with the terms of service of any website accessed using this software.
+Users are responsible for complying with the **terms of service** of any website accessed using this software.
 
-**Do not deploy this as a public API.**
+⚠️ Do **not deploy this as a public API**.
 
+# Performance Notes
 
-
-## Performance Notes
-
-* Each request launches browser navigation → expect **3–6 seconds latency**
-* Repeated requests may trigger anti-bot protections
-* Caching and rate-limiting are strongly recommended for extended use
+* Each request launches browser navigation → **3–6 seconds latency**
+* Repeated requests may trigger **anti-bot protections**
+* **Caching and rate limiting** are recommended for extended use
 
 
-
-## Future Improvements (Optional)
+# Future Improvements
 
 * In-memory or persistent caching
 * Reusing Selenium sessions
 * Extension-specific optimizations
+* Faster scraping using fallback APIs
 
 
+# License
 
-## License
-
-This project is provided under the **MIT License**
-(usage responsibility remains with the user).
+This project is released under the **MIT License**.
 
 
