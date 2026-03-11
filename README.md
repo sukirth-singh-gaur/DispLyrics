@@ -2,8 +2,10 @@
 
 ![Description](assets/images/Screenshot%202025-04-27%20230235.png)
 
-
-A Chrome extension that enables lyrics on Spotify for songs that do not have built-in lyrics by dynamically fetching them from the web.
+## The Problem
+Spotify’s web player does not provide lyrics for many songs. I built a Chrome extension called DispLyrics that enables the lyrics feature even for songs that don’t officially have lyrics available.
+## The Solution
+The extension fetches lyrics from AZLyrics using a backend scraping service and dynamically injects them into the Spotify UI.
 
 ## Tools & Technologies
 
@@ -213,5 +215,6 @@ Users are responsible for complying with the **terms of service** of any website
 # License
 
 This project is released under the **MIT License**.
+
 
 
